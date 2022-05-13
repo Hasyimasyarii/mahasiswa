@@ -18,6 +18,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="card-title text-right">Daftar Mahasiswa</h4>
+                <a href="{{ route('student.create') }}" class="btn btn-primary">Tambah</a>
             </div>
             <div class="card-body">
                 <select id="status" name="status" class="form-control mb-2" style="width: 200px">
@@ -35,6 +36,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama</th>
+                                <th>NIM</th>
                                 <th>Jurusan</th>
                                 <th>Foto</th>
                                 <th>Action</th>
@@ -74,6 +76,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'name', name: 'name'},
+                {data: 'nim', name: 'nim'},
                 {data: 'major', name: 'major'},
                 {
                     data: 'photo_profile', 

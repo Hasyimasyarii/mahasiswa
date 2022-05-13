@@ -18,6 +18,15 @@ class Student extends Model
         'photo'
     ];
 
+    public function getPhotoAttribute($image)
+    {
+        if ($image) {
+            return asset('storage/students/' . $image);
+        }else{
+            return null;
+        }
+    }
+
     public function getAvatarUrlAttribute()
     {
         if ($this->avatar != null) :

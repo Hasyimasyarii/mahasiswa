@@ -6,6 +6,8 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Throwable;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -33,6 +35,8 @@ class StudentController extends Controller
                 ->addColumn('photo_profile', function ($row) {
                     if ($row->photo == null) {
                         $photo = '<img alt="image" src="'. $row->avatar_url.'" class="rounded-circle" width="30">';
+                    }else{
+                        $photo = '<img alt="image" src="'. $row->photo.'" class="rounded-circle" width="30">';
                     }
                     return $photo;
                 })
@@ -49,7 +53,10 @@ class StudentController extends Controller
                     }
 
                     if (!empty($request->get('search'))) {
-                        $instance->where('major', $request->get('status'));
+                        $instance->where(function($w) use($request){
+                            $search = $request->get('search');
+                            $w->orWhere('name', 'LIKE', "%$search%");
+                        });
                     }
                 })
                 ->rawColumns(['action', 'photo_profile'])
@@ -65,7 +72,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('student.create');
     }
 
     /**
@@ -76,7 +83,54 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'      => 'required|unique:students,name',
+            'nim'       => 'required|unique:students,nim',
+            'age'       => 'required',
+            'major'     => 'required',
+            'address'   => 'required',
+        ]);
+
+        try {
+            
+            DB::beginTransaction();
+
+            if ($request->file('image') == null) {
+                $student = Student::create([
+                    'name'      => $validated['name'],
+                    'nim'       => $validated['nim'],
+                    'age'       => $validated['age'],
+                    'major'     => $validated['major'],
+                    'address'   => $validated['address'],
+                ]);
+            }else {
+                $image = $request->file('image');
+                $image->storeAs('public/students', $image->hashName());
+
+                $student = Student::create([
+                    'name'      => $validated['name'],
+                    'nim'       => $validated['nim'],
+                    'age'       => $validated['age'],
+                    'major'     => $validated['major'],
+                    'address'   => $validated['address'],
+                    'photo'     => $image->hashName()
+                ]);
+            }
+           
+
+            DB::commit();
+
+            $notification = array(
+                'message'   => 'Berhasil tambah mahasiswa dengan nama '.$student->name,
+                'title'     => 'Mahasiswa'
+            );
+            
+            return redirect()->route('student.show', $student->id)->with($notification);
+
+        } catch (\Throwable $e) {
+            return redirect()->back()->with(['error' => 'Tambah data gagal! ' . $e->getMessage()]);
+        }
+
     }
 
     /**
@@ -87,7 +141,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = Student::find($id);
+
+        return view('student.show', compact('student'));
     }
 
     /**
@@ -98,7 +154,9 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $student = Student::find($id);
+
+        return view('student.edit', compact('student'));
     }
 
     /**
@@ -110,7 +168,57 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name'      => 'required',
+            'nim'       => 'required',
+            'age'       => 'required',
+            'major'     => 'required',
+            'address'   => 'required',
+        ]);
+
+        try {
+            
+            DB::beginTransaction();
+            $student = Student::find($id);
+
+            if ($request->file('image') == null) {
+                $student->update([
+                    'name'      => $validated['name'],
+                    'nim'       => $validated['nim'],
+                    'age'       => $validated['age'],
+                    'major'     => $validated['major'],
+                    'address'   => $validated['address'],
+                ]);
+            }else {
+                if ($student->photo != null) {
+                    Storage::delete('public/students/' . basename($student->photo));
+                }
+                $image = $request->file('image');
+                $image->storeAs('public/students', $image->hashName());
+
+                $student->update([
+                    'name'      => $validated['name'],
+                    'nim'       => $validated['nim'],
+                    'age'       => $validated['age'],
+                    'major'     => $validated['major'],
+                    'address'   => $validated['address'],
+                    'photo'     => $image->hashName()
+                ]);
+            }
+           
+
+            DB::commit();
+
+            $notification = array(
+                'message'   => 'Berhasil tambah mahasiswa dengan nama '.$student->name,
+                'title'     => 'Mahasiswa'
+            );
+            
+            return redirect()->route('student.show', $student->id)->with($notification);
+
+        } catch (\Throwable $e) {
+            return redirect()->back()->with(['error' => 'Tambah data gagal! ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -121,6 +229,17 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $student =  Student::find($id);
+            if ($student->photo != null) {
+                Storage::delete('public/students/' . basename($student->photo));
+            }
+            $student->delete();
+
+            return response()->json(['status' => 'success']);
+        } catch (Throwable $e) {
+
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
     }
 }
