@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::resource('student', StudentController::class);
+Route::get('student/ajax', [StudentController::class, 'ajax'])->name('student.ajax');
