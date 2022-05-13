@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Icon -->
-    <link rel="shortcut icon" href="{{ asset('vendors/img/unsplash/background.jpg') }}">
+    <link rel="shortcut icon" href="{{ asset('vendors/img/stisla.svg') }}">
 
     {{-- plugin-css --}}
     @stack('plugin-css')
@@ -50,7 +50,7 @@
 
         <footer class="main-footer">
             <div class="footer-left">
-              Copyright &copy; 2021 <div class="bullet"></div> Design By <a href="https://pshtrantingtrenggalek.com" target="_blank">Ranting Trenggalek</a>
+              Copyright &copy; {{ date('Y') }} <div class="bullet"></div> By <a href="#">{{ config('app.name') }}</a>
             </div>
             <div class="footer-right">
               

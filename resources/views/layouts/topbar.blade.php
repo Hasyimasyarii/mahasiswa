@@ -4,11 +4,6 @@
         <a class="sidebar-gone-show nav-collapse-toggle nav-link" href="#">
             <i class="fas fa-ellipsis-v"></i>   
         </a>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a href="#" class="nav-link">Halaman Pelatih</a>
-            </li>
-        </ul>
     </div>
     <form class="form-inline ml-auto">
     </form>

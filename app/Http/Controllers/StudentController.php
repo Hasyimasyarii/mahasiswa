@@ -2,21 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class StudentController extends Controller
 {
-      /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +13,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $mahasiswa = Student::all();
-
-        return view('home', compact('mahasiswa'));
+        return view('student.index');
     }
 
     /**
