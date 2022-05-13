@@ -31,7 +31,9 @@ class StudentController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('photo_profile', function ($row) {
-                    $photo = '<img alt="image" src="'. $row->avatar_url.'" class="rounded-circle" width="30">';
+                    if ($row->photo == null) {
+                        $photo = '<img alt="image" src="'. $row->avatar_url.'" class="rounded-circle" width="30">';
+                    }
                     return $photo;
                 })
                 ->addColumn('action', function($row){
@@ -40,6 +42,15 @@ class StudentController extends Controller
                                 <a href="' . route('student.show', $row->id) . '" class="btn btn-success">Detail</a>';
     
                         return $btn;
+                })
+                ->filter(function ($instance) use ($request) {
+                    if ($request->get('status')) {
+                        $instance->where('major', $request->get('status'));
+                    }
+
+                    if (!empty($request->get('search'))) {
+                        $instance->where('major', $request->get('status'));
+                    }
                 })
                 ->rawColumns(['action', 'photo_profile'])
                 ->make(true);

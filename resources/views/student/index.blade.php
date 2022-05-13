@@ -20,6 +20,15 @@
                 <h4 class="card-title text-right">Daftar Mahasiswa</h4>
             </div>
             <div class="card-body">
+                <select id="status" name="status" class="form-control mb-2" style="width: 200px">
+                    <option value="">--Filter Jurusan--</option>
+                    @php
+                        $major = ['Teknik Informatika', 'Sistem Informasi', 'Akutansi', 'Manajemen'];
+                    @endphp
+                    @foreach ($major as $item)
+                        <option value="{{ $item }}">{{ $item }}</option>
+                    @endforeach
+                </select>
                 <div class="table-responsive">
                     <table class="table table-striped datatable">
                         <thead>
@@ -49,10 +58,19 @@
 
 @push('custom-js')
     <script>
-        $('.datatable').DataTable({
+        var table = $('.datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('student.index') }}",
+            ordering: true,
+            info: true,
+            filter: true,
+            ajax:  {
+                url : "{{ route('student.index') }}",
+                data: function (d) {
+                    d.status = $('#status').val(),
+                    d.search = $('input[type="search"]').val()
+                }
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'name', name: 'name'},
@@ -69,7 +87,13 @@
                     orderable: false,
                     searchable: false
                 },
-            ]
+            ],
+            language: {
+                search: "Cari Mahasiswa"
+            }
+        });
+        $('#status').change(function(){
+            table.draw();
         });
     </script>
 @endpush
