@@ -77,7 +77,7 @@
                     </div>
                     <div class="form-group">
                         <label>Foto</label>
-                        <input type="file" id="input-file-now" name="image" class="dropify">
+                        <input type="file" id="input-file-now" name="image" class="dropify" data-max-file-size="3M" data-allowed-file-extensions="jpg png jpeg">
                     </div>
                     <button class="btn btn-block btn-primary">Simpan Data</button>
                 </div>

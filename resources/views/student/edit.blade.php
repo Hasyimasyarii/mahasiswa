@@ -82,7 +82,7 @@
                     </div>
                     <div class="form-group">
                         <label>Foto</label>
-                        <input type="file" id="input-file-now" name="image" class="dropify">
+                        <input type="file" id="input-file-now" name="image" class="dropify" data-max-file-size="3M" data-allowed-file-extensions="jpg png jpeg">
                     </div>
                     <div class="form-group">
                         @if ($student->photo == null)
