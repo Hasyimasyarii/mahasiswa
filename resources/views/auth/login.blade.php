@@ -5,10 +5,8 @@
 <div class="d-flex flex-wrap align-items-stretch">
     <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
       <div class="p-4 m-3">
-        <div class="login-brand text-left">
-          <img src="{{ asset('vendors/img/stisla-fill.svg') }}" alt="logo" width="100" class="shadow-light rounded-circle">
-        </div>
-        <h4 class="text-dark font-weight-normal">Selamat Datang di <span class="font-weight-bold">Web {{ config('app.name'); }}</span></h4>
+
+        <h4 class="text-dark font-weight-normal">Selamat Datang di <span class="font-weight-bold">Manajemen Kelas</span></h4>
         <p class="text-muted">Sebelum anda masuk ke halaman website ini , anda harus login terlebih dahulu</p>
         <form class="form" method="POST" action="{{ route('login') }}" autocomplete="off">
           @csrf
@@ -60,10 +58,7 @@
           </div>
 
         </form>
-
-        <div class="text-center mt-5 text-small">
-          Copyright &copy; {{ config('app.name') }}
-        </div>
+   
       </div>
     </div>
     <div class="col-lg-8 col-12 order-lg-2 order-1 min-vh-100 background-walk-y position-relative overlay-gradient-bottom" data-background="{{ asset('vendors/img/unsplash/login-bg.jpg') }}">
